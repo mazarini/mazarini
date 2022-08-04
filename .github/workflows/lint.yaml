@@ -44,7 +44,7 @@ jobs:
                   key: ${{ runner.os }}-${{ matrix.php-version }}-composer-${{ hashFiles('composer.json') }}
                   restore-keys: ${{ runner.os }}-${{ matrix.php-version }}-composer-
 
-            - name: "Composer install"
+            - name: "Install project"
               run: composer install
 
             - name: "Lint composer"

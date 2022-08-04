@@ -4,9 +4,8 @@ on:
     pull_request:
     push:
         branches:
-            - main
+            - master
             - dev
-            - dev-tools
 
 env:
     fail-fast: true
@@ -33,7 +32,7 @@ jobs:
                   coverage: "none"
                   extensions: "pdo_sqlite"
                   php-version: ${{ matrix.php-version }}
-                  tools: composer:v2
+                  tools: composer:v2, phpmd
 
             - name: "Add PHPUnit matcher"
               run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
@@ -49,11 +48,8 @@ jobs:
                   key: ${{ runner.os }}-${{ matrix.php-version }}-composer-${{ hashFiles('composer.json') }}
                   restore-keys: ${{ runner.os }}-${{ matrix.php-version }}-composer-
 
-            - name: "Install tools"
-              run: composer global require phpmd/phpmd
-
-            - name: "Install"
+            - name: "Install project"
               run: composer install
 
             - name: "Analyse with phpmd"
-              run: ${composer_global_bin}/phpmd src,lib text config/phpmd/rulesets.xml
+              run: make phpmd

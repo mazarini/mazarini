@@ -1,6 +1,6 @@
 # Makefile
 
-all: phpmd phpstan validate
+all: phpmd validate
 
 validate: composer phpcs container twig yaml phpstan test
 
@@ -38,7 +38,7 @@ phpmd:
 # phpstan
 #################################################################
 phpstan:
-	~/.config/composer/vendor/bin/phpstan -cconfig/tool/phpstan/phpstan.neon.dist
+	phpstan -cconfig/tool/phpstan/phpstan.neon.dist
 
 #################################################################
 # phpunit
