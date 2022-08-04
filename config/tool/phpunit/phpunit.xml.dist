@@ -5,7 +5,7 @@
          xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
          backupGlobals="false"
          colors="true"
-         bootstrap="tests/bootstrap.php"
+         bootstrap="bootstrap.php"
          convertDeprecationsToExceptions="false"
 >
     <php>
@@ -19,13 +19,15 @@
 
     <testsuites>
         <testsuite name="Project Test Suite">
-            <directory>tests</directory>
+            <directory>../../../tests</directory>
+            <directory>../../../lib/*/tests/</directory>
         </testsuite>
     </testsuites>
 
     <coverage processUncoveredFiles="true">
         <include>
-            <directory suffix=".php">src</directory>
+            <directory suffix=".php">../../../src</directory>
+            <directory suffix=".php">../../../lib/*/lib</directory>
         </include>
     </coverage>
 
@@ -33,10 +35,11 @@
         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
     </listeners>
 
+    <extensions>
+    <extension class="\DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension" />
     <!-- Run `composer require symfony/panther` before enabling this extension -->
     <!--
-    <extensions>
         <extension class="Symfony\Component\Panther\ServerExtension" />
-    </extensions>
     -->
+    </extensions>
 </phpunit>

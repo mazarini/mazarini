@@ -17,12 +17,14 @@
  * with mazarini/mazarini. If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace App;
+namespace App\Tests;
 
-use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
-use Symfony\Component\HttpKernel\Kernel as BaseKernel;
+use PHPUnit\Framework\TestCase;
 
-class Kernel extends BaseKernel
+class DummyTest extends TestCase
 {
-    use MicroKernelTrait;
+    public function testSomething(): void
+    {
+        $this->assertTrue(true);
+    }
 }

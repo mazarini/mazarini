@@ -1,0 +1,54 @@
+name: "Tests"
+
+on:
+    pull_request:
+    push:
+        branches:
+            - main
+            - dev
+
+env:
+    fail-fast: true
+
+jobs:
+    test:
+        name: "${{ matrix.operating-system }} / PHP ${{ matrix.php-version }}"
+        runs-on: ${{ matrix.operating-system }}
+        continue-on-error: false
+
+        strategy:
+            matrix:
+                operating-system: ['ubuntu-latest']
+                php-version: ['8.1']
+
+        steps:
+            - name: "Checkout code"
+              uses: actions/checkout@v2.3.3
+
+            - name: "Install PHP with extensions"
+              uses: shivammathur/setup-php@2.7.0
+              with:
+                  coverage: "none"
+                  extensions: "pdo_sqlite"
+                  php-version: ${{ matrix.php-version }}
+                  tools: composer:v2
+
+            - name: "Add PHPUnit matcher"
+              run: echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+
+            - name: "Set composer cache directory"
+              id: composer-cache
+              run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+            - name: "Cache composer"
+              uses: actions/cache@v2.1.2
+              with:
+                  path: ${{ steps.composer-cache.outputs.dir }}
+                  key: ${{ runner.os }}-${{ matrix.php-version }}-composer-${{ hashFiles('composer.json') }}
+                  restore-keys: ${{ runner.os }}-${{ matrix.php-version }}-composer-
+
+            - name: "Install"
+              run: composer install
+
+            - name: "Test with phpunit"
+              run: make test
