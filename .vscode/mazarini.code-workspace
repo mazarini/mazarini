@@ -1,0 +1,23 @@
+{
+    "folders": [
+        {
+            "path": ".."
+        }
+    ],
+    "settings": {
+        "json.schemas": [],
+        "files.associations": {
+            ".env.test": "ini",
+            ".neon.dist": "yaml",
+            ".xml.dist": "xml"
+        },
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {},
+        "php-cs-fixer.allowRisky": true,
+        "php-cs-fixer.config": "config/phpcs/file.php",
+        "php-cs-fixer.onsave": true,
+        "git.suggestSmartCommit": false,
+        "phpmd.validate.executablePath": "~/.config/composer/vendor/bin/phpmd",
+        "phpmd.validate.rulesetsFile": "config/phpmd/rulesets.xml",
+    },
+}
