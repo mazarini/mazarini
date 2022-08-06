@@ -1,6 +1,7 @@
 ###> local ###
 /var/*
-!/var/data
+!var/data
+/var/data/dev.db
 /**/*.log
 ###< local ###
 
@@ -10,7 +11,7 @@
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
-/var/
+#var/
 /vendor/
 ###< symfony/framework-bundle ###
 
