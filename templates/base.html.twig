@@ -1,19 +1,72 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-        {% endblock %}
-
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+	<head>
+		<meta charset="UTF-8">
+		<title>
+			{% block title %}
+				Welcome!
+			{% endblock %}
+		</title>
+		<link
+		rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+		{# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+		{{ encore_entry_link_tags('app') }}
+		{% block stylesheets %}{% endblock %}
+	</head>
+	<body class="{% block body_class %}body{% endblock %}">
+		<header
+			id="header">
+			<!-- block header start -->
+			{% block header %}
+				<div class="text-center">
+					<p>
+						block header
+					</p>
+				</div>
+			{% endblock %}
+			<!-- block body start -->
+		</header>
+		<!-- block body start -->
+		{% block body %}
+			<div id="wrapper" class="row">
+				<div id="sidebar" class="col-sm-3">
+					{% block sidebar %}
+						<!-- block sidebar start -->
+						<div class="text-center">
+							<p>
+								block sidebar to be init
+							</p>
+						</div>
+						<!-- block sidebar end -->
+					{% endblock %}
+				</div>
+				<div
+					id="main" class="col-sm-9">
+					<!-- block main start -->
+					{% block main %}
+						<div class="text-center">
+							<p>
+								block main to be init
+							</p>
+						</div>
+					{% endblock %}
+					<!-- block main end -->
+				</div>
+			</div>
+			<!-- block footer start -->
+			<footer id="footer">
+				{% block footer %}
+					<div class="text-center">
+						<p>
+							block footer to be init
+						</p>
+					</div>
+				{% endblock %}
+			</footer>
+			<!-- block footer end -->
+		{% endblock %}
+		<!-- block body end -->
+		{{ encore_entry_script_tags('app') }}
+		{% block javascripts %}{% endblock %}
+	</body>
 </html>
