@@ -2,13 +2,16 @@
     "folders": [
         {
             "path": ".."
+        },
+        {
+            "path": "../lib/ToolBundle"
         }
     ],
     "settings": {
         "json.schemas": [],
         "files.associations": {
             ".env.test": "ini",
-            ".neon.dist": "yaml",
+            "phpstan.neon.dist": "yaml",
             ".xml.dist": "xml"
         },
         "editor.formatOnSave": true,

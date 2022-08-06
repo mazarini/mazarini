@@ -1,6 +1,6 @@
 # Makefile
 
-all: phpmd validate
+all: validate phpmd
 
 validate: composer phpcs container twig yaml phpstan test
 
@@ -71,11 +71,10 @@ yaml:
 #################################################################
 
 init:
+	mkdir -p var/data
 	bin/console doctrine:database:drop --env=dev --force
 	bin/console doctrine:database:drop --env=test --force
 	bin/console doctrine:database:create --env=dev
 	bin/console doctrine:database:create --env=test
 	bin/console doctrine:migrations:migrate --no-interaction --env=dev
 	bin/console doctrine:migrations:migrate --no-interaction --env=test
-
-

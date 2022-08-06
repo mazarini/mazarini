@@ -8,5 +8,7 @@ parameters:
         - ../../../tests
         - ../../../lib/TreeBundle/lib
         - ../../../lib/ToolBundle/lib
+        - ../../../lib/ToolBundle/src
+        - ../../../lib/ToolBundle/tests
     bootstrapFiles:
         - ../../../vendor/autoload.php
