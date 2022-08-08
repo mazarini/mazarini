@@ -20,9 +20,8 @@
 namespace Mazarini\ToolBundle\Test\Controller;
 
 use Doctrine\Bundle\DoctrineBundle\Registry;
-use ErrorException;
 use Mazarini\ToolBundle\Entity\EntityInterface;
-use Mazarini\ToolBundle\Repository\EntityRepository;
+use Mazarini\ToolBundle\Repository\EntityRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use TypeError;
@@ -30,7 +29,8 @@ use TypeError;
 /**
  * Undocumented class.
  *
- * @template T of EntityInterface
+ * @template E of EntityInterface
+ * @template R of EntityRepositoryInterface
  */
 abstract class EntityControllerTestAbstract extends WebTestCase
 {
@@ -38,18 +38,13 @@ abstract class EntityControllerTestAbstract extends WebTestCase
     protected string $routeRoot = '';
 
     /**
-     * @return T
-     */
-    abstract protected function getNewEntity();
-
-    /**
-     * @return EntityRepository<T>
+     * @return R
      */
     abstract protected function getRepository();
 
     protected function setUp(): void
     {
-        $entity = $this->getEntity();
+        $entity = $this->getRepository()->getNew(0);
         $this->getRepository()->store($entity);
         $this->id = $entity->getId();
     }
@@ -61,22 +56,6 @@ abstract class EntityControllerTestAbstract extends WebTestCase
             return $registry;
         }
         throw new TypeError();
-    }
-
-    /**
-     * @return T
-     */
-    protected function getEntity(int $id = null)
-    {
-        if (null === $id) {
-            return $this->getNewEntity();
-        }
-        $entity = $this->getRepository()->find($id);
-        if (null === $entity) {
-            throw new ErrorException(sprintf('Entity with id %d not found', $id));
-        }
-
-        return $entity;
     }
 
     protected function getRouter(): Router
@@ -91,7 +70,7 @@ abstract class EntityControllerTestAbstract extends WebTestCase
     /**
      * Undocumented function.
      *
-     * @param T $entity
+     * @param EntityInterface $entity
      *
      * @return array<string,string|int>
      */
@@ -108,7 +87,7 @@ abstract class EntityControllerTestAbstract extends WebTestCase
     /**
      * Undocumented function.
      *
-     * @param T $entity
+     * @param EntityInterface $entity
      */
     protected function getPath(string $route, $entity = null): string
     {
@@ -116,7 +95,7 @@ abstract class EntityControllerTestAbstract extends WebTestCase
             $route = $this->routeRoot.$route;
         }
         if (null === $entity) {
-            $entity = $this->getEntity();
+            $entity = $this->getRepository()->getNew(0);
         }
 
         return $this->getRouter()->generate($route, $this->getRouteParameter($entity));

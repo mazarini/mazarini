@@ -21,20 +21,38 @@ namespace App\Repository;
 
 use App\Entity\Entity;
 use Doctrine\Persistence\ManagerRegistry;
-use Mazarini\ToolBundle\Repository\EntityRepository as Repository;
+use Mazarini\ToolBundle\Repository\EntityRepositoryAbstract;
 
 /**
- * @extends Repository<Entity>
+ * @extends EntityRepositoryAbstract<Entity>
  *
  * @method Entity|null find($id, $lockMode = null, $lockVersion = null)
  * @method Entity|null findOneBy(array $criteria, array $orderBy = null)
  * @method Entity[]    findAll()
  * @method Entity[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class EntityRepository extends Repository
+class EntityRepository extends EntityRepositoryAbstract
 {
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Entity::class);
+    }
+
+    /**
+     * @return Entity
+     */
+    public function getNew($id = 0)
+    {
+        return new Entity();
+    }
+
+    /**
+     * Undocumented function.
+     *
+     * @return ?Entity
+     */
+    public function get(int $id)
+    {
+        return $this->find($id);
     }
 }

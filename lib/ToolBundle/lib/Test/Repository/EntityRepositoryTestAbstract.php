@@ -22,26 +22,26 @@ namespace Mazarini\ToolBundle\Test\Repository;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use ErrorException;
 use Mazarini\ToolBundle\Entity\EntityInterface;
-use Mazarini\ToolBundle\Repository\EntityRepository;
+use Mazarini\ToolBundle\Repository\EntityRepositoryAbstract;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use TypeError;
 
 /**
  * Undocumented class.
  *
- * @template T of EntityInterface
+ * @template E of EntityInterface
  */
 abstract class EntityRepositoryTestAbstract extends KernelTestCase
 {
     protected int $id = 0;
 
     /**
-     * @return T
+     * @return E
      */
     abstract protected function getNewEntity();
 
     /**
-     * @return EntityRepository<T>
+     * @return EntityRepositoryAbstract<E>
      */
     abstract protected function getRepository();
 
@@ -54,10 +54,10 @@ abstract class EntityRepositoryTestAbstract extends KernelTestCase
 
     public function testFind(): void
     {
-        $entity = $this->getRepository()->find(-1);
+        $entity = $this->getRepository()->get(-1);
         $this->assertNull($entity);
 
-        $entity = $this->getRepository()->find($this->id);
+        $entity = $this->getRepository()->get($this->id);
         $this->assertNotNull($entity);
         if (null !== $entity) {
             $this->assertSame($this->id, $entity->getId());
@@ -66,11 +66,11 @@ abstract class EntityRepositoryTestAbstract extends KernelTestCase
 
     public function testRemove(): void
     {
-        $entity = $this->getRepository()->find($this->id);
+        $entity = $this->getRepository()->get($this->id);
         $this->assertNotNull($entity);
         if (null !== $entity) {
             $this->getRepository()->remove($entity);
-            $entity = $this->getRepository()->find(1);
+            $entity = $this->getRepository()->get(1);
             $this->assertNull($entity);
         }
     }
@@ -85,14 +85,14 @@ abstract class EntityRepositoryTestAbstract extends KernelTestCase
     }
 
     /**
-     * @return T
+     * @return E
      */
     protected function getEntity(int $id = null)
     {
         if (null === $id) {
             return $this->getNewEntity();
         }
-        $entity = $this->getRepository()->find($id);
+        $entity = $this->getRepository()->get($id);
         if (null === $entity) {
             throw new ErrorException(sprintf('Entity with id %d not found', $id));
         }

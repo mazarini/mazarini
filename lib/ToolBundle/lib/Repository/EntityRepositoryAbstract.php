@@ -23,30 +23,55 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Mazarini\ToolBundle\Entity\EntityInterface;
 
 /**
- * @template T of EntityInterface
- * @template-extends ServiceEntityRepository<T>
+ * @template E of EntityInterface
+ * @template-extends ServiceEntityRepository<E>
+ * @template-implements EntityRepositoryInterface<E>
  *
- * @method T|null find($id, $lockMode = null, $lockVersion = null)
- * @method T|null findOneBy(array $criteria, array $orderBy = null)
- * @method T[]    findAll()
- * @method T[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method E|null find($id, $lockMode = null, $lockVersion = null)
+ * @method E|null findOneBy(array $criteria, array $orderBy = null)
+ * @method E[]    findAll()
+ * @method E[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class EntityRepository extends ServiceEntityRepository
+abstract class EntityRepositoryAbstract extends ServiceEntityRepository implements EntityRepositoryInterface
 {
     public static bool $autoFlush = true;
     public static int $qtyToFlush = 0;
 
-    public function groupFlush(): void
+    /**
+     * Undocumented function.
+     *
+     * @param int|array<int,int> $id
+     *
+     * @return E
+     */
+    abstract public function getNew($id = 0);
+
+    /**
+     * Undocumented function.
+     *
+     * @return ?E
+     */
+    public function get(int $id)
     {
-        static::$autoFlush = true;
+        return $this->find($id);
     }
 
-    public function setAutoflush(): void
+    public function blockFlush(): void
     {
         static::$autoFlush = false;
     }
 
-    public function store(object $entity): void
+    public function unblockFlush(): void
+    {
+        static::$autoFlush = true;
+    }
+
+    /**
+     * Save an entity.
+     *
+     * @param E $entity
+     */
+    public function store($entity): void
     {
         $this->getEntityManager()->persist($entity);
         ++static::$qtyToFlush;
@@ -55,7 +80,12 @@ class EntityRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(object $entity): void
+    /**
+     * Remove an entity.
+     *
+     * @param E $entity
+     */
+    public function remove($entity): void
     {
         ++static::$qtyToFlush;
         $this->getEntityManager()->remove($entity);

@@ -42,7 +42,7 @@ class EntityController extends AbstractController
     #[Route('/new', name: 'app_entity_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityRepository $entityRepository): Response
     {
-        $entity = new Entity();
+        $entity = $entityRepository->getNew();
         $form = $this->createForm(EntityType::class, $entity);
         $form->handleRequest($request);
 

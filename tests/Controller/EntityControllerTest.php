@@ -26,7 +26,7 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use TypeError;
 
 /**
- * @extends EntityControllerTestAbstract<Entity>
+ * @extends EntityControllerTestAbstract<Entity,EntityRepository>
  */
 class EntityControllerTest extends EntityControllerTestAbstract
 {
@@ -37,7 +37,7 @@ class EntityControllerTest extends EntityControllerTestAbstract
         $this->client = static::createClient();
         $this->routeRoot = 'app_entity';
         foreach (['slug', '$slug1', '$slug2', '$slug3'] as $slug) {
-            $this->getRepository()->store($this->getEntity()->setSlug($slug));
+            $this->getRepository()->store($this->getRepository()->getNew()->setSlug($slug));
         }
     }
 
@@ -71,7 +71,7 @@ class EntityControllerTest extends EntityControllerTestAbstract
 
     public function testShow(): void
     {
-        $fixture = $this->getEntity();
+        $fixture = $this->getRepository()->getNew();
         $fixture->setSlug('My Title');
 
         $this->getRepository()->store($fixture);
@@ -97,7 +97,7 @@ class EntityControllerTest extends EntityControllerTestAbstract
 
         self::assertResponseRedirects($this->getPath('_index'));
 
-        $fixture = $this->getRepository()->find($id);
+        $fixture = $this->getRepository()->get($id);
 
         self::assertNotNull($fixture);
         if (null !== $fixture) {
