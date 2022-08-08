@@ -48,10 +48,10 @@ cover: cover-text
 test:
 	bin/phpunit --cache-result-file var/cache/phpunit.result.cache --configuration config/tool/phpunit/phpunit.xml.dist
 
-cover-text:
+cover-html:
 	XDEBUG_MODE=coverage bin/phpunit --cache-result-file var/cache/phpunit.result.cache --configuration config/tool/phpunit/phpunit.xml.dist --coverage-html var/cover
 
-cover-html:
+cover-text:
 	XDEBUG_MODE=coverage bin/phpunit --cache-result-file var/cache/phpunit.result.cache --configuration config/tool/phpunit/phpunit.xml.dist --coverage-text
 
 #################################################################
