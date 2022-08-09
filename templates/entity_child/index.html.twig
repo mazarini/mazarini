@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	EntityChild index
+{% endblock %}
+
+{% block main %}
+	<h1>EntityChild index</h1>
+
+	{{ include('entity_child/_list.html.twig') }}
+	<a href="{{ path('app_entity_child_new') }}">Create new</a>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	EntityParent index
+{% endblock %}
+
+{% block main %}
+	<h1>EntityParent index</h1>
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Slug</th>
+				<th>Id</th>
+				<th>actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for entity_parent in entity_parents %}
+				<tr>
+					<td>{{ entity_parent.slug }}</td>
+					<td>{{ entity_parent.id }}</td>
+					<td>
+						<a href="{{ path('app_entity_parent_show', {'id': entity_parent.id}) }}">show</a>
+						<a href="{{ path('app_entity_parent_edit', {'id': entity_parent.id}) }}">edit</a>
+					</td>
+				</tr>
+			{% else %}
+				<tr>
+					<td colspan="3">no records found</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+	<a href="{{ path('app_entity_parent_new') }}">Create new</a>
+{% endblock %}

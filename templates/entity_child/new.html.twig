@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	New EntityChild
+{% endblock %}
+
+{% block main %}
+	<h1>Create new EntityChild</h1>
+
+	{{ include('entity_child/_form.html.twig') }}
+
+	<a href="{{ path('app_entity_child_index') }}">back to list</a>
+{% endblock %}
