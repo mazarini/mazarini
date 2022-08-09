@@ -19,10 +19,11 @@
 
 namespace App\Entity;
 
-use App\Repository\EntityRepository;
+use App\Repository\EntityChildRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Mazarini\ToolBundle\Entity\Entity;
 
-#[ORM\Entity(repositoryClass: EntityRepository::class)]
+#[ORM\Entity(repositoryClass: EntityChildRepository::class)]
 class EntityChild extends Entity
 {
     #[ORM\Column(length: 31)]

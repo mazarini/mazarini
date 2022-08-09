@@ -23,6 +23,7 @@ use App\Repository\EntityParentRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Mazarini\ToolBundle\Entity\Entity;
 
 #[ORM\Entity(repositoryClass: EntityParentRepository::class)]
 class EntityParent extends Entity
@@ -81,5 +82,10 @@ class EntityParent extends Entity
         }
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return sprintf('%s (%d)', $this->getSlug(), $this->getId());
     }
 }
