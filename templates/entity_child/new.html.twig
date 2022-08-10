@@ -1,13 +1,16 @@
-{% extends 'base.html.twig' %}
+{% extends 'entity_child/layout.html.twig' %}
 
 {% block title %}
 	New EntityChild
 {% endblock %}
 
-{% block main %}
-	<h1>Create new EntityChild</h1>
+{% block main_title %}
+	Create new EntityChild
+{% endblock %}
 
-	{{ include('entity_child/_form.html.twig') }}
+{% block main_content %}
 
-	<a href="{{ path('app_entity_child_index') }}">back to list</a>
+	{{ include('default/_form.html.twig') }}
+
+	<a href="{{ path('app_entity_parent_show',{'id': entity.parent.id }) }}">back to list</a>
 {% endblock %}

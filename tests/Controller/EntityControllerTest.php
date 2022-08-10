@@ -64,9 +64,10 @@ class EntityControllerTest extends EntityControllerTestAbstract
             'entity[slug]' => 'Testing',
         ]);
 
-        self::assertResponseRedirects($this->getPath('_index'));
+        $fixtures = $this->getRepository()->findby([], ['id' => 'desc']);
+        self::assertSame($originalNumObjects + 1, \count($fixtures));
 
-        self::assertSame($originalNumObjects + 1, \count($this->getRepository()->findAll()));
+        self::assertResponseRedirects($this->getPath('_show', $fixtures[0]));
     }
 
     public function testShow(): void
@@ -95,7 +96,7 @@ class EntityControllerTest extends EntityControllerTestAbstract
             'entity[slug]' => 'Something New',
         ]);
 
-        self::assertResponseRedirects($this->getPath('_index'));
+        self::assertResponseRedirects($this->getPath('_show', $fixture));
 
         $fixture = $this->getRepository()->get($id);
 

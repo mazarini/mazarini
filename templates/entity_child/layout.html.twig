@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+	<h1>
+		{% block main_title %}EntityChild
+		{% endblock %}
+	</h1>
+
+	{{ include('entity_parent/_view.html.twig', {'entity': entity.parent } ) }}
+
+	{% block main_content %}{% endblock %}
+
+{% endblock %}

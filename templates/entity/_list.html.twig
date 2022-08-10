@@ -12,8 +12,8 @@
 				<td>{{ entity.id }}</td>
 				<td>{{ entity.slug }}</td>
 				<td>
-					<a href="{{ path('app_entity_child_show', {'id': entity.id}) }}">show</a>
-					<a href="{{ path('app_entity_child_edit', {'id': entity.id}) }}">edit</a>
+					<a href="{{ path('app_entity_show', {'id': entity.id}) }}">show</a>
+					<a href="{{ path('app_entity_edit', {'id': entity.id}) }}">edit</a>
 				</td>
 			</tr>
 		{% else %}
@@ -21,11 +21,5 @@
 				<td colspan="3">no records found</td>
 			</tr>
 		{% endfor %}
-		<tr>
-			<td colspan="2"></td>
-			<td>
-				<a href="{{ path('app_entity_child_new', {'id': entityParent.id}) }}">Create new</a>
-			</td>
-		</tr>
 	</tbody>
 </table>

@@ -30,7 +30,6 @@ class EntityChildType extends AbstractType
     {
         $builder
             ->add('slug')
-            ->add('parent')
         ;
     }
 

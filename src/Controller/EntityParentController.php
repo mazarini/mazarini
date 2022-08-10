@@ -27,71 +27,54 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @template E of EntityParent
+ * @template R of EntityParentRepository
+
+ * @template-extends EntityControllerAbstract<EntityParent,EntityParentRepository>
+ */
 #[Route('/parent')]
 class EntityParentController extends EntityControllerAbstract
 {
+    protected string $baseName = 'entity_parent';
+
     #[Route('/', name: 'app_entity_parent_index', methods: ['GET'])]
     public function index(EntityParentRepository $parentRepository): Response
     {
         return $this->render('entity_parent/index.html.twig', [
-            'entity_parents' => $parentRepository->findAll(),
+            'entities' => $parentRepository->findAll(),
         ]);
     }
 
-    #[Route('/new', name: 'app_entity_parent_new', methods: ['GET', 'POST'])]
+    #[Route('/0/new.html', name: 'app_entity_parent_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityParentRepository $entityManager): Response
     {
-        $entityParent = new EntityParent();
-        $form = $this->createForm(EntityParentType::class, $entityParent);
-        $form->handleRequest($request);
+        return $this->editAction($request, $entityManager, $entityManager->getNew(), EntityParentType::class);
+    }
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->store($entityParent);
-
-            return $this->redirectToRoute('app_entity_parent_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('entity_parent/new.html.twig', [
-            'entity_parent' => $entityParent,
-            'form' => $form,
-        ]);
+    #[Route('/{id}/edit', name: 'app_entity_parent_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, EntityParent $entityParent, EntityParentRepository $entityManager): Response
+    {
+        return $this->editAction($request, $entityManager, $entityParent, EntityParentType::class);
     }
 
     #[Route('/{id}', name: 'app_entity_parent_show', methods: ['GET'])]
     public function show(EntityParent $entityParent): Response
     {
         return $this->render('entity_parent/show.html.twig', [
-            'entity_parent' => $entityParent,
+            'entity' => $entityParent,
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_entity_parent_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, EntityParent $entityParent, EntityParentRepository $entityManager): Response
+    /**
+     * Undocumented function.
+     *
+     * @param EntityParent           $entity
+     * @param EntityParentRepository $entityRepository
+     */
+    #[Route('/{id}/delete.html', name: 'app_entity_parent_delete', methods: ['POST'])]
+    public function delete(Request $request, EntityParent $entity, EntityParentRepository $entityRepository): Response
     {
-        $form = $this->createForm(EntityParentType::class, $entityParent);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_entity_parent_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('entity_parent/edit.html.twig', [
-            'entity_parent' => $entityParent,
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'app_entity_parent_delete', methods: ['POST'])]
-    public function delete(Request $request, EntityParent $entityParent, EntityParentRepository $entityManager): Response
-    {
-        if (!$this->isDeleteTokenValid($request, $entityParent)) {
-            return $this->redirectToRoute('app_entity_show', ['id', $entityParent->getId()], Response::HTTP_SEE_OTHER);
-        }
-
-        $entityManager->remove($entityParent);
-
-        return $this->redirectToRoute('app_entity_index', [], Response::HTTP_SEE_OTHER);
+        return $this->deleteAction($request, $entity, $entityRepository);
     }
 }

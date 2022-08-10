@@ -22,87 +22,56 @@ namespace App\Controller;
 use App\Entity\Entity;
 use App\Form\EntityType;
 use App\Repository\EntityRepository;
-use Mazarini\ToolBundle\Entity\EntityInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Mazarini\ToolBundle\Controller\EntityControllerAbstract;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @template E Entity
+ * @template R EntityRepository
+
+ * @template-extends EntityControllerAbstract<Entity,EntityRepository>
+ */
 #[Route('/entity')]
-class EntityController extends AbstractController
+class EntityController extends EntityControllerAbstract
 {
+    protected string $baseName = 'entity';
+
     #[Route('/', name: 'app_entity_index', methods: ['GET'])]
     public function index(EntityRepository $entityRepository): Response
     {
-        return $this->render('entity/index.html.twig', [
+        return $this->render($this->getTemplate('index'), [
             'entities' => $entityRepository->findAll(),
         ]);
     }
 
-    #[Route('/new', name: 'app_entity_new', methods: ['GET', 'POST'])]
+    #[Route('/0/new.html', name: 'app_entity_new', methods: ['GET', 'POST'], requirements: ['$id' => '0'])]
     public function new(Request $request, EntityRepository $entityRepository): Response
     {
-        $entity = $entityRepository->getNew();
-        $form = $this->createForm(EntityType::class, $entity);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityRepository->store($entity);
-
-            return $this->redirectToRoute('app_entity_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('entity/new.html.twig', [
-            'entity' => $entity,
-            'form' => $form,
-        ]);
+        return $this->editAction($request, $entityRepository, $entityRepository->getNew(), EntityType::class);
     }
 
-    #[Route('/{id}', name: 'app_entity_show', methods: ['GET'])]
+    #[Route('/{id}/edit.html', name: 'app_entity_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, EntityRepository $entityRepository, Entity $entity): Response
+    {
+        return $this->editAction($request, $entityRepository, $entity, EntityType::class);
+    }
+
+    #[Route('/{id}/show.html', name: 'app_entity_show', methods: ['GET'])]
     public function show(Entity $entity): Response
     {
-        return $this->render('entity/show.html.twig', [
+        return $this->render($this->getTemplate('show'), [
             'entity' => $entity,
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_entity_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Entity $entity, EntityRepository $entityRepository): Response
-    {
-        $form = $this->createForm(EntityType::class, $entity);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityRepository->store($entity);
-
-            return $this->redirectToRoute('app_entity_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('entity/edit.html.twig', [
-            'entity' => $entity,
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'app_entity_delete', methods: ['POST'])]
+    /**
+     * Undocumented function.
+     */
+    #[Route('/{id}/delete', name: 'app_entity_delete', methods: ['POST'])]
     public function delete(Request $request, Entity $entity, EntityRepository $entityRepository): Response
     {
-        if (!$this->isDeleteTokenValid($request, $entity)) {
-            return $this->redirectToRoute('app_entity_show', ['id', $entity->getId()], Response::HTTP_SEE_OTHER);
-        }
-
-        $entityRepository->remove($entity);
-
-        return $this->redirectToRoute('app_entity_index', [], Response::HTTP_SEE_OTHER);
-    }
-
-    protected function isDeleteTokenValid(Request $request, EntityInterface $entity): bool
-    {
-        $token = $request->request->get('_token');
-        if (\is_string($token)) {
-            return $this->isCsrfTokenValid('delete'.$entity->getId(), $token);
-        }
-
-        return false;
+        return $this->deleteAction($request, $entity, $entityRepository);
     }
 }
